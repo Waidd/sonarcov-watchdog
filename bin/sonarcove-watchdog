@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const watchdog = require('../src/index');
+
+program
+.version('0.1.0')
+.description(
+  'Parse lcov report and compare coverage value with sonar measures. Exit 1 if coverage drops.\n' +
+  '  Sonar url and api token must be provided by arguments or by environment variables SONAR_URL and SONAR_API_TOKEN.'
+)
+.usage('[options] [sonar-url [sonar-api-token]]')
+.arguments('[sonar-url [sonar-api-token]]')
+.option('--coverage-path <path>', 'change the lcov path (default to ./coverage/lcov.info)')
+.option('--sonar-properties <path>', 'change the sonar-project.properties (default to ./sonar-project.properties');
+
+program.parse(process.argv);
+
+const options = {
+  sonarUrl: (program.args && program.args[0]) || process.env.SONAR_URL,
+  sonarApiToken: (program.args && program.args[1]) || process.env.SONAR_API_TOKEN,
+  coveragePath: program.coveragePath || './coverage/lcov.info',
+  sonarPropertiesPath: program.sonarProperties || './sonar-project.properties'
+};
+
+if (!options.sonarUrl) {
+  console.error('Sonar url must be provided as first argument or by environment variable SONAR_URL');
+  process.exit(1);
+}
+if (!options.sonarApiToken) {
+  console.error('Sonar api token must be provided as second argument or by environment variable SONAR_API_TOKEN');
+  process.exit(1);
+}
+
+watchdog(options);
