@@ -32,6 +32,7 @@ $ sonarcov-watchdog --help
     -V, --version              output the version number
     --coverage-path <path>     change the lcov path (default to ./coverage/lcov.info)
     --sonar-properties <path>  change the sonar-project.properties (default to ./sonar-project.properties
+    --increase-only            exit 1 if coverage drops or remains equal
 ```
 
 ## Exemple
