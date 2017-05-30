@@ -56,14 +56,19 @@ function computeConverage (data, coverageExclusions) {
   return coverage;
 }
 
-function compareCoverage ([sonarCoverage, currentCoverage]) {
+function compareCoverage (options, [sonarCoverage, currentCoverage]) {
   const coverageBump = Math.round((currentCoverage - sonarCoverage) * 10) / 10;
   console.log(`Current coverage is ${coverageBump < 0 ? '' : '+'}${coverageBump}% from master`);
+  console.log(`(currently: ${currentCoverage}% master: ${sonarCoverage}%)`);
 
   if (coverageBump < 0) {
     console.log('Value has decreased, try again !');
     process.exit(1);
   } else if (coverageBump === 0) {
+    if (options.increaseOnly) {
+      console.log('Value has not increased, you can do better !');
+      process.exit(1);
+    }
     console.log('Value is stable, fair enough.');
   } else {
     console.log('Value has increased, good job !');
@@ -84,7 +89,7 @@ function execute (options) {
 
     return Promise.all([sonarCoveragePromise, parseCoveragePromise]);
   })
-  .then(compareCoverage)
+  .then(compareCoverage.bind({}, options))
   .catch((err) => {
     console.error('Error:', err.message);
     process.exit(1);

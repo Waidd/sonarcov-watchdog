@@ -1,6 +1,6 @@
 {
   "name": "sonarcov-watchdog",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Parse lcov report and compare coverage value with sonar measures. Exit 1 if coverage drops.",
   "author": "Thomas Cholley <cholley.t@gmail.com",
   "bugs": {
